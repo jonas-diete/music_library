@@ -1,4 +1,4 @@
-TRUNCATE TABLE albums RESTART IDENTITY;
+TRUNCATE TABLE albums, artists RESTART IDENTITY;
 
 INSERT INTO "public"."albums" ("title", "release_year", "artist_id") VALUES
 ('Doolittle', 1989, 1),
