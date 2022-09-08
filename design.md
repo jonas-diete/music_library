@@ -62,28 +62,17 @@ end
 ## 4. Implement the Model class
 Define the attributes of your Model class. You can usually map the table columns to the attributes of the class, including primary and foreign keys.
 ```ruby
-# EXAMPLE
-# Table name: albums
-# Model class
-# (in lib/album.rb)
+
 class Album
-  # Replace the attributes by your own columns.
   attr_accessor :id, :title, :release_year, :artist_id
 end
-# The keyword attr_accessor is a special Ruby feature
-# which allows us to set and get attributes on an object,
-# here’s an example:
-#
-# album = Album.new
-# album.name = ‘Bossanova’
-# album.name
+
 ```
 *You may choose to test-drive this class, but unless it contains any more logic than the example above, it is probably not needed.*
 ## 5. Define the Repository Class interface
 Your Repository class will need to implement methods for each “read” or “write” operation you’d like to run against the database.
 Using comments, define the method signatures (arguments and return value) and what they do - write up the SQL queries that will be used by each method.
 ```ruby
-# EXAMPLE
 # Table name: albums
 # Repository class
 # (in lib/album_repository.rb)
@@ -99,16 +88,15 @@ class AlbumRepository
   # One argument: the id (number)
   def find(id)
     # Executes the SQL query:
-    # SELECT id, name, release_year FROM albums WHERE id = 1;
+    # SELECT id, name, release_year, artist_id FROM albums WHERE id = $1;
     # Returns a single album object.
   end
-  # Add more methods below for each operation you’d like to implement.
-  # def create(album)
-  # end
-  # def update(album)
-  # end
-  # def delete(album)
-  # end
+
+  def create(album)
+    # Executes SQL query:
+    # INSERT INTO albums (name, release_year, artist_id) VALUES ($1, $2, $3);
+    # Returns nothing
+  end
 end
 ```
 ## 6. Write Test Examples
@@ -129,7 +117,7 @@ albums[1].id # =>  2
 albums[1].title # =>  ‘Surfer Rosa’ 
 albums[1].release_year # =>  ‘1988’
 albums[0].artist_id #=> 2
-#........ return all other albums in the table
+
 # 2
 # Get a single album
 repo = AlbumRepository.new
@@ -137,8 +125,22 @@ album = repo.find(1)
 album.id # =>  1
 album.title # =>  ‘Surfer Rosa’
 album.release_year # =>  ‘1988’
-albums.artist_id #=> 2
+album.artist_id #=> 2
 # Add more examples for each method
+
+# create a new album and check it exists after with find method
+repo = AlbumRepository.new
+album = Album.new
+album.title = "A Kind of Magic"
+album.release_year = 1986
+album.artist_id = 2
+repo.create(artist)
+
+album = repo.find(4)
+album.title # =>  ‘A Kind of Magic’
+album.release_year # =>  '1986'
+album.artist_id #=> '2'
+
 ```
 Encode this example as a test.
 ## 7. Reload the SQL seeds before each test run

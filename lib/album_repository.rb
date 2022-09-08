@@ -1,4 +1,4 @@
-require './lib/album.rb'
+require_relative './album.rb'
 
 class AlbumRepository
   
@@ -16,15 +16,23 @@ class AlbumRepository
     end
 
     return array
-    # Executes the SQL query:
-    # SELECT id, title, release_year, artist_id FROM albums;
-    # Returns an array of album objects.
   end
-  # Gets a single record by its ID
-  # One argument: the id (number)
+
   def find(id)
-    # Executes the SQL query:
-    # SELECT id, name, release_year FROM albums WHERE id = 1;
-    # Returns a single album object.
+    query = "SELECT id, title, release_year, artist_id FROM albums WHERE id = $1;"
+    result = DatabaseConnection.exec_params(query, [id])
+    record = result[0]
+    album = Album.new
+    album.id = record['id']
+    album.title = record['title']
+    album.release_year = record['release_year']
+    album.artist_id = record['artist_id']
+    return album
   end
+
+  def create(album)
+    sql = "INSERT INTO albums (title, release_year, artist_id) VALUES ($1, $2, $3);"
+    DatabaseConnection.exec_params(sql, [album.title, album.release_year, album.artist_id])
+  end
+
 end

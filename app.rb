@@ -6,12 +6,10 @@ DatabaseConnection.connect('music_library')
 
 # Perform a SQL query on the database and get the result set.
 album_repository = AlbumRepository.new
-result = album_repository.all
+record = album_repository.find(3)
 
-# Print out each record from the result set .
-result.each do |record|
-  p record.id
-  p record.title
-  p record.release_year
-  p record.artist_id
-end
+# Print out the record that was returned
+p record.id
+p record.title
+p record.release_year
+p record.artist_id
